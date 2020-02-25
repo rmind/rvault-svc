@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: conf/app.Dockerfile
+    image: rvault-svc
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 1048576
+    ports:
+      - "127.0.0.1:8010:8000"
+    volumes:
+      - /data/rvault:/data
+
+  dev:
+    build:
+      context: .
+      dockerfile: conf/app.Dockerfile
+    image: rvault-svc
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 1048576
+    ports:
+      - "127.0.0.1:8001:8000"
+    volumes:
+      - ./data:/data
+      - ./src:/app
