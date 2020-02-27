@@ -1,5 +1,5 @@
 --
--- Copyright (c) 2019 Mindaugas Rasiukevicius <rmind at noxt eu>
+-- Copyright (c) 2019-2020 Mindaugas Rasiukevicius <rmind at noxt eu>
 -- All rights reserved.
 --
 -- Use is subject to license terms, as specified in the LICENSE file.
@@ -132,6 +132,9 @@ function rvault_api_register()
     return ngx.say("UID " .. uid .. " is already registered");
   end
 
+  local email = read_file(uid, "email")
+  assert(email)
+
   --
   -- Write the key and create TOTP.
   --
@@ -143,7 +146,7 @@ function rvault_api_register()
   --
   -- Respond with the ASCII QR code.
   --
-  local totp_url = totp:get_url(OTP_ISSUER, uid)
+  local totp_url = totp:get_url(OTP_ISSUER, email .. " " .. uid)
   ngx.say(get_qr_code(totp_url))
   ngx.say("Alternatively, use the plaintext key: " .. totp:get_key())
   return ngx.exit(ngx.HTTP_CREATED)
@@ -213,6 +216,18 @@ function rvault_api_setup()
     -- Just hope that the user will re-try.
     ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE)
   end
+
+  local payload, errmsg = cjson.decode(get_body())
+  if not payload then
+    ngx.status = ngx.HTTP_BAD_REQUEST
+    return ngx.say("Invalid JSON: " .. errmsg)
+  end
+  if not payload.email then
+    ngx.status = ngx.HTTP_BAD_REQUEST
+    return ngx.say("'email' must be present in the JSON object")
+  end
+  write_file(uid, "email", payload.email)
+
   ngx.say(uid)
   ngx.exit(ngx.HTTP_OK)
 end

@@ -1,7 +1,7 @@
 # rvault-svc
 
 **rvault-svc** -- server-side service for **rvault**.
-Implements key storage and authentication using TOTP/HOTP.
+Implements the key storage and authentication using TOTP/HOTP.
 
 ## Usage
 
