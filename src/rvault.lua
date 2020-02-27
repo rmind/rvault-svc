@@ -160,7 +160,7 @@ end
 -- Output: key.
 --
 function rvault_api_auth()
-  ngx.header.content_type = 'text/text';
+  ngx.header.content_type = 'text/plain';
   if ngx.var.request_method ~= 'POST' then
     ngx.exit(ngx.HTTP_NOT_ALLOWED)
   end
@@ -207,7 +207,7 @@ function rvault_api_auth()
 end
 
 function rvault_api_setup()
-  ngx.header.content_type = 'text/text';
+  ngx.header.content_type = 'text/plain';
   if ngx.var.request_method ~= 'POST' then
     ngx.exit(ngx.HTTP_NOT_ALLOWED)
   end
