@@ -18,7 +18,13 @@ uuid.randomseed(os.time() .. os.clock())
 
 OTP_ISSUER = "rvault"
 DATA_DIR = "/data"
-CRYPTO_MAX_EKEY_LENGTH = 96 + 32 + 1
+
+--
+-- Note: encryption key + authentication key + AE tag + separator.
+-- Keys and the tag are in hex; 1 byte is represented by 2 characters,
+-- therefore multiply by two.
+--
+CRYPTO_MAX_EKEY_LENGTH = (32 + 32 + 32) * 2 + 1
 UUID_TRIM_STR_LENGTH = 32
 
 --
